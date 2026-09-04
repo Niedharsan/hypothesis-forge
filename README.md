@@ -8,8 +8,8 @@
 - supervisor-guided research configuration
 - axis generation
 - subtopic generation with query-family review
-- direct Python literature adapters for PubMed, Europe PMC, OpenAlex, Crossref, and Semantic Scholar
-- optional PubTator annotation/filtering
+- MCP-based search across PubMed, Europe PMC, OpenAlex, Crossref, and Semantic Scholar
+- optional direct PubTator annotation/filtering
 - evidence selection
 - axis and global literature synthesis
 - hypothesis generation
@@ -23,7 +23,7 @@
 - FastAPI service with a browser UI
 - persisted run state under `data/runs/` by default
 - explicit stage checkpoints with select / save / reject routing
-- focus-seed creation
+- provenance-preserving focus-seed persistence
 - resumable runs
 - per-stage logs plus token/cost accounting
 
@@ -39,7 +39,9 @@
 8. `evolution`
 9. `candidate_ranking`
 
-In `dry_run` mode, the LLM path uses the bundled mock client and the `literature_retrieval` stage skips live network retrieval while still preserving the full checkpointed workflow.
+In normal mode, the canonical FastAPI workflow routes reusable literature search through an MCP client and the HypothesisForge literature MCP server. The MCP tools reuse the existing Python source adapters; query review, deduplication, evidence selection, filtering, synthesis, paper memory, reflection, and evolution remain internal scientific logic. PubTator remains a direct annotation layer.
+
+In `dry_run` mode, the LLM path uses the bundled mock client and live network literature retrieval is skipped while preserving the full checkpointed workflow.
 
 ## Run locally
 
@@ -62,19 +64,45 @@ pytest -q
 
 Set `HYPOTHESIS_FORGE_RUNS_DIR` if you want run data somewhere other than `data/runs/`.
 
+## MCP
+
+The canonical FastAPI workflow uses an in-process MCP client/server transport, so no second process is required when running the application normally:
+
+```text
+LiteratureAgent scientific logic
+        -> MCP client
+        -> HypothesisForge literature MCP server
+        -> existing source adapters
+        -> PubMed / Europe PMC / OpenAlex / Crossref / Semantic Scholar
+```
+
+The same literature server is independently launchable over stdio for external MCP clients:
+
+```bash
+python -m mcp_server
+```
+
+Current MCP tools:
+
+- `search_pubmed`
+- `search_europepmc`
+- `search_openalex`
+- `search_crossref`
+- `search_semantic_scholar`
+
+See [`docs/MCP_ROADMAP.md`](docs/MCP_ROADMAP.md) for the remaining resource/deployment work.
+
 ## API
 
 - `POST /runs` — create a run and execute `axis_generation`
 - `GET /runs/{run_id}` — load persisted run state
 - `POST /runs/{run_id}/stage` — advance selected outputs to a later stage
 - `POST /runs/{run_id}/selection` — select, save, or reject cards without deleting them
-- `POST /runs/{run_id}/focus-seed` — persist a card as a focused generation seed
+- `POST /runs/{run_id}/focus-seed` — persist a card as a focused generation seed; `source_stage` disambiguates repeated card IDs
 - `GET /runs/{run_id}/artifacts` — inspect persisted JSON artifacts
 
-## MCP roadmap
+## Deployment and data notes
 
-`MultiSourceLiteratureAgent` currently calls the repository's Python literature adapters directly. The standalone Phase 1 adapter server can be launched with `python -m mcp_server`, but the main HypothesisForge workflow still uses the direct Python retrieval path until Phase 2. See [`docs/MCP_ROADMAP.md`](docs/MCP_ROADMAP.md).
+HypothesisForge is local-first research/portfolio software. Run artifacts can contain research objectives, retrieved evidence, prompts, and model outputs. `data/runs/`, `data/cache/`, `.env`, and local virtual environments are excluded from git. Do not expose the FastAPI service directly to an untrusted network without adding an authentication/reverse-proxy boundary.
 
-## Status
-
-Research/portfolio software. Outputs require scientific review; the system does not replace domain expertise or experimental validation.
+Outputs require scientific review; the system does not replace domain expertise or experimental validation.
