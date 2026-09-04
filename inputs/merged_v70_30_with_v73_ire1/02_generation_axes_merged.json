@@ -1,0 +1,222 @@
+{
+  "axes": [
+    {
+      "axis_id": "A01",
+      "axis_name": "Epigenetic Dysregulation and Reprogramming",
+      "biological_vulnerability": "Aberrant epigenetic modifications leading to aberrant gene expression patterns and AML cell survival/proliferation.",
+      "sub_branches": [
+        "Histone modification modifiers (e.g., HDAC, HMT inhibitors)",
+        "DNA methylation regulators (e.g., DNMT inhibitors)",
+        "Chromatin remodeling complexes"
+      ],
+      "why_relevant_to_goal": "Epigenetic alterations are hallmarks of many cancers, including AML, and targeting these pathways can revert malignant phenotypes.",
+      "transfer_source_contexts": [
+        "Normal hematopoiesis",
+        "MDS",
+        "other hematologic malignancies",
+        "epigenetic drugs in other cancer types"
+      ],
+      "diversity_rationale": "Focuses on post-translational modifications and DNA accessibility, distinct from signaling or metabolic pathways.",
+      "selection_rationale": "Epigenetic regulators are well-established drivers of AML and offer multiple druggable targets.",
+      "non_overlap_rationale": "Distinct from axes targeting direct oncogenic signaling pathways or metabolic dependencies.",
+      "underexplored_state_or_context": "Context-dependent roles of specific epigenetic modifiers in AML stem cells vs. differentiated cells."
+    },
+    {
+      "axis_id": "A02",
+      "axis_name": "Oncogenic Signaling Pathway Inhibition",
+      "biological_vulnerability": "Overactive or mutated signaling pathways crucial for AML cell growth, survival, and resistance to apoptosis.",
+      "sub_branches": [
+        "FLT3/ITD signaling",
+        "RAS-MAPK pathway",
+        "PI3K-AKT-mTOR pathway",
+        "NOTCH signaling"
+      ],
+      "why_relevant_to_goal": "Targeting key oncogenic drivers can lead to direct inhibition of AML cell proliferation and survival.",
+      "transfer_source_contexts": [
+        "Targeted therapies in CML, lung cancer, melanoma",
+        "oncogenic driver mutations in other leukemias",
+        "biomarkers for pathway activation"
+      ],
+      "diversity_rationale": "Focuses on intrinsic intracellular signaling cascades, differing from epigenetic or metabolic routes.",
+      "selection_rationale": "Many AML subtypes are driven by well-defined oncogenic mutations amenable to targeted therapy.",
+      "non_overlap_rationale": "Mechanistically distinct from epigenetic modifications; focuses on direct signal transduction.",
+      "underexplored_state_or_context": "Resistance mechanisms to targeted therapies via pathway redundancy or bypass."
+    },
+    {
+      "axis_id": "A03",
+      "axis_name": "Metabolic Reprogramming and Dependencies",
+      "biological_vulnerability": "AML cells exhibit altered metabolic profiles (e.g., increased glycolysis, glutaminolysis) that support their high proliferation and survival.",
+      "sub_branches": [
+        "Glucose metabolism (e.g., GLUT transporters, glycolytic enzymes)",
+        "Glutamine metabolism",
+        "Lipid metabolism",
+        "Mitochondrial function"
+      ],
+      "why_relevant_to_goal": "Exploiting metabolic vulnerabilities can selectively starve or poison rapidly dividing AML cells.",
+      "transfer_source_contexts": [
+        "Metabolic vulnerabilities in solid tumors",
+        "Warburg effect research",
+        "metabolomics studies in leukemia",
+        "nutrient deprivation strategies"
+      ],
+      "diversity_rationale": "Focuses on cellular bioenergetics and nutrient utilization, a different fundamental aspect of cell biology than signaling or epigenetics.",
+      "selection_rationale": "Metabolic pathways are essential for cancer cell survival and are increasingly recognized as druggable targets.",
+      "non_overlap_rationale": "Distinct from signaling pathways; targets cellular energy production and resource utilization.",
+      "underexplored_state_or_context": "Specific metabolic dependencies of quiescent AML stem cells."
+    },
+    {
+      "axis_id": "A04",
+      "axis_name": "Protein Homeostasis and Stress Response",
+      "biological_vulnerability": "AML cells may be more reliant on specific chaperones or proteasome machinery to cope with increased protein synthesis and oncogenic stress.",
+      "sub_branches": [
+        "Heat shock proteins (e.g., HSP90 inhibitors)",
+        "Proteasome inhibitors",
+        "Autophagy regulators"
+      ],
+      "why_relevant_to_goal": "Disrupting protein homeostasis can induce overwhelming cellular stress and apoptosis in rapidly dividing cancer cells.",
+      "transfer_source_contexts": [
+        "Proteasome inhibitors in multiple myeloma",
+        "HSP90 inhibitors in other cancers",
+        "ER stress pathways",
+        "autophagy modulation in cancer"
+      ],
+      "diversity_rationale": "Targets cellular machinery responsible for protein quality control, distinct from metabolic or signaling axes.",
+      "selection_rationale": "Protein homeostasis is critical for survival under oncogenic stress, and its disruption can be a potent anti-cancer strategy.",
+      "non_overlap_rationale": "Focuses on protein folding and degradation, different from the synthesis or signaling of proteins.",
+      "underexplored_state_or_context": "Role of the unfolded protein response (UPR) in AML cell survival and therapy resistance."
+    },
+    {
+      "axis_id": "A05",
+      "axis_name": "Immune Evasion and Dysregulation",
+      "biological_vulnerability": "AML cells employ mechanisms to evade immune surveillance and attack by immune cells, creating an immunosuppressive microenvironment.",
+      "sub_branches": [
+        "Checkpoint inhibitors (e.g., PD-1/PD-L1, CTLA-4)",
+        "Immunomodulatory drugs targeting myeloid cells",
+        "Engagers of immune cells (e.g., bispecific antibodies)"
+      ],
+      "why_relevant_to_goal": "Re-activating the immune system to recognize and eliminate AML cells offers a powerful therapeutic avenue.",
+      "transfer_source_contexts": [
+        "Immunotherapy in solid tumors and lymphomas",
+        "CAR-T cell therapy",
+        "immunomodulation in autoimmune diseases",
+        "AML microenvironment studies"
+      ],
+      "diversity_rationale": "Focuses on the host immune system's interaction with AML cells, distinct from intrinsic AML cell biology.",
+      "selection_rationale": "Immune checkpoint pathways and cellular immunotherapies are revolutionizing cancer treatment, with growing application in hematologic malignancies.",
+      "non_overlap_rationale": "Targets the interaction between AML cells and the immune system, not direct AML cell-intrinsic vulnerabilities.",
+      "underexplored_state_or_context": "Targeting the myeloid-derived suppressor cell (MDSC) compartment within the AML bone marrow microenvironment."
+    },
+    {
+      "axis_id": "A06",
+      "axis_name": "Transcriptional Regulation and RNA Processing",
+      "biological_vulnerability": "AML is characterized by aberrant transcription factors and defects in RNA splicing/processing that maintain the malignant state.",
+      "sub_branches": [
+        "Transcription factor inhibitors (e.g., targeting RUNX1, MYC)",
+        "RNA splicing modulators",
+        "RNA-binding protein targets"
+      ],
+      "why_relevant_to_goal": "Controlling gene expression at the transcriptional or post-transcriptional level can reverse AML phenotypes.",
+      "transfer_source_contexts": [
+        "Targeting transcription factors in other cancers",
+        "splicing factor mutations in MDS/AML",
+        "RNA-binding proteins in development",
+        "RNA-targeted therapies"
+      ],
+      "diversity_rationale": "Focuses on the control of gene expression at the level of transcription and RNA maturation, distinct from epigenetic modifications or protein synthesis.",
+      "selection_rationale": "Key oncogenic transcription factors and aberrant RNA processing are critical drivers in many AML subtypes.",
+      "non_overlap_rationale": "Distinct from epigenetic axes (which affect accessibility) and signaling axes (which affect protein activity downstream of transcription).",
+      "underexplored_state_or_context": "The role of long non-coding RNAs (lncRNAs) and circular RNAs (circRNAs) in AML pathogenesis."
+    },
+    {
+      "axis_id": "A07",
+      "axis_name": "Cell Cycle Control and Mitotic Machinery",
+      "biological_vulnerability": "Dysregulated cell cycle progression and mitotic errors are common in AML, leading to uncontrolled proliferation.",
+      "sub_branches": [
+        "Cyclin-dependent kinase (CDK) inhibitors",
+        "Aurora kinase inhibitors",
+        "Centrosome and spindle assembly checkpoint targets"
+      ],
+      "why_relevant_to_goal": "Halting or disrupting the cell cycle can induce apoptosis in rapidly dividing cancer cells.",
+      "transfer_source_contexts": [
+        "CDK inhibitors in breast cancer",
+        "mitotic inhibitors in other hematologic malignancies",
+        "cytogenetics of AML",
+        "DNA damage response pathways"
+      ],
+      "diversity_rationale": "Targets the core machinery of cell division, distinct from metabolic or survival signaling pathways.",
+      "selection_rationale": "The uncontrolled proliferation characteristic of AML is driven by cell cycle deregulation, making these pathways attractive therapeutic targets.",
+      "non_overlap_rationale": "Focuses specifically on the mechanisms of cell division, separate from general growth signaling or metabolic support.",
+      "underexplored_state_or_context": "Exploiting the dependency on specific cell cycle checkpoints in AML stem cells."
+    },
+    {
+      "axis_id": "A08",
+      "axis_name": "Oxidative Stress and Redox Homeostasis",
+      "biological_vulnerability": "AML cells may have altered capacity to manage reactive oxygen species (ROS), making them susceptible to pro-oxidant therapies or inhibitors of antioxidant defenses.",
+      "sub_branches": [
+        "Antioxidant enzyme inhibitors (e.g., thioredoxin reductase)",
+        "ROS-generating agents",
+        "NAD(P)H:quinone oxidoreductase 1 (NQO1) targeting"
+      ],
+      "why_relevant_to_goal": "Inducing oxidative stress can selectively kill cancer cells that are less equipped to handle ROS.",
+      "transfer_source_contexts": [
+        "Oxidative stress in neurodegeneration",
+        "ROS signaling in cancer",
+        "drug resistance linked to antioxidant capacity",
+        "redox biology of stem cells"
+      ],
+      "diversity_rationale": "Focuses on the balance of reactive oxygen species, a fundamental cellular process distinct from signaling, metabolism, or epigenetics.",
+      "selection_rationale": "Cancer cells often exhibit a higher basal level of ROS, creating a vulnerability to further oxidative stress or impaired antioxidant defense.",
+      "non_overlap_rationale": "Mechanistically different from signaling pathways that might modulate ROS, this axis directly targets ROS balance.",
+      "underexplored_state_or_context": "The differential ROS sensitivity of AML stem cells versus more differentiated leukemic blasts."
+    },
+    {
+      "axis_id": "A09",
+      "axis_name": "Lysosomal Dysfunction and Autophagy Flux",
+      "biological_vulnerability": "AML cells might exhibit vulnerabilities related to lysosomal function, waste degradation, or excessive autophagy flux that can be therapeutically exploited.",
+      "sub_branches": [
+        "Lysosomal inhibitors (e.g., chloroquine/hydroxychloroquine derivatives)",
+        "Modulators of lysosome-mediated degradation",
+        "Targeting autophagosome-lysosome fusion"
+      ],
+      "why_relevant_to_goal": "Disrupting the cellular waste disposal and recycling system can lead to accumulation of toxic cellular components and cell death.",
+      "transfer_source_contexts": [
+        "Autophagy inhibitors in neurodegenerative diseases",
+        "lysosomal targets in other cancers",
+        "drug delivery via lysosomes",
+        "autophagy research in cancer stem cells"
+      ],
+      "diversity_rationale": "Targets a specific organelle and its function in cellular homeostasis, distinct from broader metabolic or signaling pathways.",
+      "selection_rationale": "Autophagy and lysosomal function are critical for maintaining cellular homeostasis under stress, and their dysregulation can be a cancer vulnerability.",
+      "non_overlap_rationale": "Distinct from protein homeostasis (axis A04) by focusing on the degradative machinery; distinct from general metabolism by focusing on organelle-specific functions.",
+      "underexplored_state_or_context": "The role of autophagy in conferring resistance to chemotherapy in AML."
+    },
+    {
+      "axis_id": "A10",
+      "axis_name": "Telomere Maintenance and Genomic Instability",
+      "biological_vulnerability": "AML cells might rely on telomerase or alternative telomere maintenance mechanisms to overcome replicative senescence, or they may be highly sensitive to agents that induce widespread genomic instability.",
+      "sub_branches": [
+        "Telomerase inhibitors",
+        "Targeting DNA repair pathways (e.g., PARP inhibitors in specific contexts)",
+        "Inducers of chromosomal instability"
+      ],
+      "why_relevant_to_goal": "Targeting telomere maintenance can induce cellular senescence or death in long-lived cancer cells; enhancing genomic instability can overwhelm cellular repair capacity.",
+      "transfer_source_contexts": [
+        "Telomere biology in aging and cancer",
+        "PARP inhibitors in ovarian/breast cancer",
+        "genomic instability in solid tumors",
+        "DNA damage response pathways"
+      ],
+      "diversity_rationale": "Focuses on the maintenance of genomic integrity and chromosomal stability, a fundamental cellular process distinct from signaling or metabolism.",
+      "selection_rationale": "Telomere maintenance is crucial for immortalization of cancer cells, and targeting genomic instability can induce lethal DNA damage.",
+      "non_overlap_rationale": "Mechanistically distinct from epigenetic axes (which alter gene expression without necessarily causing wholesale instability) and signaling axes (which focus on cellular proliferation signals).",
+      "underexplored_state_or_context": "The specific dependencies of AML stem cells on telomere maintenance mechanisms."
+    },
+    {
+      "axis_id": "A04_FIXED_WEAK",
+      "axis_name": "Fixed weak proteostasis axis — Protein Homeostasis (Proteostasis) Disruption",
+      "rationale": "Merged reflection context only; from v73 fixed weak-axis run, used to support the inserted H001 replacement.",
+      "merge_only": true
+    }
+  ],
+  "diversity_audit": "Ensured maximal distinction by focusing on diverse cellular processes: epigenetic regulation, intrinsic signaling, metabolic dependencies, protein homeostasis, immune interaction, transcriptional control, cell cycle machinery, redox balance, lysosomal function, and genomic stability. Each axis targets fundamentally different biological mechanisms, molecular players, or cellular compartments, minimizing overlap in search strategies, intervention logic, and validation experiments."
+}

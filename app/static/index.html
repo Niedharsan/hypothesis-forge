@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HypothesisForge</title><link rel="stylesheet" href="/static/styles.css"></head>
+<body>
+<header><div><b>HYPOTHESISFORGE</b><span>Multi-Agent Literature-Grounded Scientific Discovery</span></div><span id="health">checking…</span></header>
+<main>
+  <aside><h3>Stages</h3><div id="stages"></div><section id="runMeta"></section></aside>
+  <section class="content">
+    <div class="tabs"><button data-tab="setup" class="active">Setup</button><button data-tab="outputs">Outputs</button><button data-tab="saved">Saved</button><button data-tab="usage">Usage</button><button data-tab="artifacts">Artifacts</button><button data-tab="logs">Logs</button></div>
+    <div id="notice"></div>
+    <section id="setup" class="panel tab active"><h1>Start a research run</h1><label>Research objective<textarea id="objective" placeholder="Describe the scientific question, scope, and evidence boundary."></textarea></label><div class="grid"><label>Cutoff year<input id="cutoff" type="number" value="2023"></label><label>Model<select id="model"><option>gemini-2.5-flash-lite</option><option>gemini-2.5-flash</option><option>gemini-2.5-pro</option></select></label><label>Runtime<select id="runtime"><option value="normal">normal</option><option value="dry_run">dry_run</option></select></label><label><input id="evoRetrieval" type="checkbox"> Focused retrieval before Evolution</label></div><button id="start">Start run</button></section>
+    <section id="outputs" class="panel tab"><div class="row"><h2 id="stageTitle">Outputs</h2><div><input id="guidance" placeholder="Optional guidance for next stage"><button id="advance">Advance selected</button><button id="advanceAll">Advance all</button></div></div><div id="cards"></div></section>
+    <section id="saved" class="panel tab"><h2>Saved branches</h2><div id="savedCards"></div></section>
+    <section id="usage" class="panel tab"><h2>Tokens & cost</h2><pre id="usageText"></pre></section>
+    <section id="artifacts" class="panel tab"><h2>Run artifacts</h2><div id="artifactList"></div></section>
+    <section id="logs" class="panel tab"><h2>Logs</h2><div id="logList"></div></section>
+  </section>
+</main>
+<script src="/static/app.js"></script></body></html>

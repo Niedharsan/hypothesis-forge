@@ -1,0 +1,31 @@
+{
+  "hypothesis_id": "H001",
+  "source_axis_ids": [
+    "A01"
+  ],
+  "source_subtopic_ids": [
+    "A01_T01",
+    "A01_T02"
+  ],
+  "title": "Synergistic Inhibition of DNMT and HDAC to Elicit Immunogenic Neoantigens in AML",
+  "hypothesis": "Combinatorial inhibition of DNA methyltransferases (DNMTs) and histone deacetylases (HDACs) will synergistically reactivate endogenous retroviral elements in AML cells, leading to the expression of immunogenic neoantigens and subsequent immune-mediated tumor lysis.",
+  "candidate_intervention_or_focus": "Combination therapy with DNMT inhibitors (e.g., Decitabine) and HDAC inhibitors.",
+  "mechanistic_rationale": "Evidence suggests that simultaneous DNMT and HDAC inhibition can induce immunogenic neoantigens from endogenous retroviral elements, potentially eliciting a T-cell response against AML cells. This approach targets epigenetic dysregulation to enhance anti-tumor immunity. (ER01, ER09 in A01)",
+  "falsifiable_predictions": [
+    "AML cells treated with combined DNMT and HDAC inhibitors will show increased expression of retroviral elements and neoantigens compared to single-agent treatment.",
+    "Immunohistochemical analysis will reveal increased T-cell infiltration in tumors treated with the combination therapy.",
+    "In vitro co-culture assays will demonstrate enhanced killing of AML cells by T-cells when the AML cells have been pre-treated with combined DNMT and HDAC inhibitors."
+  ],
+  "key_assumptions": [
+    "AML cells express relevant endogenous retroviral elements that can be epigenetically silenced.",
+    "The re-expressed elements will be processed and presented as neoantigens by AML cells.",
+    "The AML patient immune system is capable of recognizing and responding to these neoantigens."
+  ],
+  "first_validation_step": "In vitro testing of combined DNMT and HDAC inhibitors on AML cell lines for neoantigen expression and T-cell recognition.",
+  "novelty_risk": "low",
+  "must_verify_later": [
+    "Clinical efficacy in AML patient cohorts.",
+    "Optimal dosing and scheduling of combination therapy.",
+    "Potential for synergistic toxicity."
+  ]
+}

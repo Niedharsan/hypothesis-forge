@@ -1,0 +1,30 @@
+llm:
+  default_model: gemini-2.5-flash-lite
+  cheap_model: gemini-2.5-flash-lite
+
+runtime:
+  mode: normal
+  limits:
+    max_llm_calls_per_run: 200
+  pricing:
+    gemini-2.5-flash-lite:
+      input_per_million: 0.10
+      output_per_million: 0.40
+  dry_run:
+    mock_llm_outputs: true
+
+retrieval:
+  default_sources:
+    - PubMed
+    - EuropePMC
+    - OpenAlex
+    - Crossref
+  max_queries_per_subtopic: 3
+  raw_papers_per_source_query: 5
+  ai_papers_per_subtopic: 5
+  web_search: false
+  semantic_scholar:
+    allow_unauthenticated: false
+    citation_expansion: false
+    reference_expansion: false
+    recommendations: false
