@@ -175,7 +175,7 @@ def _article_id_xml(article: ET.Element, id_type: str) -> str | None:
 
 
 def _add_ncbi_identity(params: dict) -> None:
-    params["tool"] = os.getenv("NCBI_TOOL", "coscientist")
+    params["tool"] = os.getenv("NCBI_TOOL", "hypothesisforge")
     if os.getenv("NCBI_EMAIL"):
         params["email"] = os.getenv("NCBI_EMAIL")
     if os.getenv("NCBI_API_KEY"):
