@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import Any
 
 from utils.run_logger import log_gemini_call
+from utils.security import redact_sensitive_text
 
 import yaml
 from dotenv import load_dotenv
@@ -73,7 +74,7 @@ def ask_gemini_json(prompt: str, model: str | None = None, *, agent: str | None 
                 model=selected_model,
                 prompt=prompt,
                 duration_s=time.perf_counter() - started,
-                error=str(exc),
+                error=redact_sensitive_text(exc),
                 metadata={**(metadata or {}), "attempt": attempt, "max_attempts": max_attempts, "retryable": retryable, "will_retry": not is_final},
             )
             if is_final:
@@ -162,7 +163,7 @@ def _default_model(config_path: str | Path = "configs/config.yaml") -> str:
 
 
 def _repair_invalid_json_escapes(text: str) -> str:
-    """Escape invalid backslashes inside JSON strings, e.g. \alpha -> \\alpha."""
+    """Escape invalid backslashes inside JSON strings, e.g. \\alpha -> \\\\alpha."""
     out: list[str] = []
     in_string = False
     escaped = False
