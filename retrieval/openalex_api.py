@@ -22,13 +22,12 @@ class OpenAlexAPI:
             params = {"search": executed_query, "per-page": limit}
             if os.getenv("OPENALEX_MAILTO"):
                 params["mailto"] = os.getenv("OPENALEX_MAILTO")
-            headers = {}
             if os.getenv("OPENALEX_API_KEY"):
-                headers["Authorization"] = f"Bearer {os.getenv('OPENALEX_API_KEY')}"
+                params["api_key"] = os.getenv("OPENALEX_API_KEY")
             data = self.client.get_json(
                 "https://api.openalex.org/works",
                 params=params,
-                headers=headers or None,
+                headers=None,
                 cache_namespace="openalex",
             )
             items = data.get("results", [])
