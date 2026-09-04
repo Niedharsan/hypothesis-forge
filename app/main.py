@@ -11,6 +11,7 @@ from fastapi.staticfiles import StaticFiles
 
 import app.orchestrator as orchestrator
 from agents.mcp_literature_agent import MCPLiteratureAgent
+from app.focus_seeds import create_focus_seed
 from app.models import FocusSeedRequest, SelectionRequest, StageRequest, StartRunRequest
 from app.storage import RUNS_DIR, list_artifacts, read_run
 from utils.security import redact_sensitive_text
@@ -104,7 +105,7 @@ def selection(run_id: str, payload: SelectionRequest) -> dict[str, Any]:
 @app.post("/runs/{run_id}/focus-seed")
 def focus_seed(run_id: str, payload: FocusSeedRequest) -> dict[str, Any]:
     try:
-        return orchestrator.create_focus_seed(read_run(run_id), payload)
+        return create_focus_seed(read_run(run_id), payload)
     except (FileNotFoundError, ValueError) as exc:
         if isinstance(exc, FileNotFoundError):
             raise HTTPException(status_code=404, detail="Run not found") from exc
