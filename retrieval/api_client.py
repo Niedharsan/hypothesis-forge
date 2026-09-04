@@ -5,11 +5,12 @@ import json
 import random
 import time
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 import requests
 
 from utils.run_logger import log_event
+from utils.security import redact_sensitive_text
 
 
 class CachedAPIClient:
@@ -46,7 +47,6 @@ class CachedAPIClient:
         )
         cache_path.write_text(json.dumps(data), encoding="utf-8")
         return data
-
 
     def get_text(
         self,
@@ -177,7 +177,7 @@ class CachedAPIClient:
                             "url": url,
                             "cache_namespace": cache_namespace,
                             "attempt": attempt + 1,
-                            "error": str(exc),
+                            "error": redact_sensitive_text(exc),
                             "sleep_s": round(sleep_s, 3),
                         },
                         status="error",
@@ -198,11 +198,11 @@ class CachedAPIClient:
                         "cache_namespace": cache_namespace,
                         "attempt": attempt + 1,
                         "status_code": status_code,
-                        "error": str(exc),
+                        "error": redact_sensitive_text(exc),
                     },
                     status="error",
                 )
-                raise
+                raise RuntimeError(f"API request failed: {url}: HTTP {status_code or 'error'}") from exc
             except Exception as exc:
                 last_error = exc
                 log_event(
@@ -213,12 +213,12 @@ class CachedAPIClient:
                         "url": url,
                         "cache_namespace": cache_namespace,
                         "attempt": attempt + 1,
-                        "error": str(exc),
+                        "error": redact_sensitive_text(exc),
                     },
                     status="error",
                 )
                 raise
-        error_message = str(last_error) if last_error else "unknown error"
+        error_message = redact_sensitive_text(last_error) if last_error else "unknown error"
         log_event(
             "api",
             "request_failed_after_retries",
@@ -226,7 +226,6 @@ class CachedAPIClient:
             status="error",
         )
         raise RuntimeError(f"API request failed after retries: {url}: {error_message}")
-
 
     def _request_text_with_retries(
         self,
@@ -244,35 +243,97 @@ class CachedAPIClient:
         for attempt in range(max_retries + 1):
             self._rate_limit()
             try:
-                log_event("api", "request_start", {"method": method, "url": url, "cache_namespace": cache_namespace, "attempt": attempt + 1})
+                log_event(
+                    "api",
+                    "request_start",
+                    {"method": method, "url": url, "cache_namespace": cache_namespace, "attempt": attempt + 1},
+                )
                 response = requests.get(url, params=params, headers=headers, timeout=timeout)
                 if _should_retry_status(response.status_code) and attempt < max_retries:
                     retry_after = _retry_after_seconds(response.headers.get("Retry-After"))
                     sleep_s = retry_after if retry_after is not None else _jitter(delay)
-                    log_event("api", "request_retry", {"method": method, "url": url, "cache_namespace": cache_namespace, "attempt": attempt + 1, "status_code": response.status_code, "sleep_s": round(sleep_s, 3)}, status="error")
+                    log_event(
+                        "api",
+                        "request_retry",
+                        {
+                            "method": method,
+                            "url": url,
+                            "cache_namespace": cache_namespace,
+                            "attempt": attempt + 1,
+                            "status_code": response.status_code,
+                            "sleep_s": round(sleep_s, 3),
+                        },
+                        status="error",
+                    )
                     time.sleep(sleep_s)
                     delay *= 2
                     continue
                 response.raise_for_status()
-                log_event("api", "request_end", {"method": method, "url": url, "cache_namespace": cache_namespace, "attempt": attempt + 1, "status_code": response.status_code})
+                log_event(
+                    "api",
+                    "request_end",
+                    {"method": method, "url": url, "cache_namespace": cache_namespace, "attempt": attempt + 1, "status_code": response.status_code},
+                )
                 return response.text
             except (requests.Timeout, requests.ConnectionError) as exc:
                 last_error = exc
                 if attempt < max_retries:
                     sleep_s = _jitter(delay)
-                    log_event("api", "request_retry", {"method": method, "url": url, "cache_namespace": cache_namespace, "attempt": attempt + 1, "error": str(exc), "sleep_s": round(sleep_s, 3)}, status="error")
+                    log_event(
+                        "api",
+                        "request_retry",
+                        {
+                            "method": method,
+                            "url": url,
+                            "cache_namespace": cache_namespace,
+                            "attempt": attempt + 1,
+                            "error": redact_sensitive_text(exc),
+                            "sleep_s": round(sleep_s, 3),
+                        },
+                        status="error",
+                    )
                     time.sleep(sleep_s)
                     delay *= 2
                     continue
                 break
             except requests.HTTPError as exc:
-                log_event("api", "request_error", {"method": method, "url": url, "cache_namespace": cache_namespace, "attempt": attempt + 1, "status_code": getattr(exc.response, "status_code", None), "error": str(exc)}, status="error")
-                raise
+                status_code = getattr(exc.response, "status_code", None)
+                log_event(
+                    "api",
+                    "request_error",
+                    {
+                        "method": method,
+                        "url": url,
+                        "cache_namespace": cache_namespace,
+                        "attempt": attempt + 1,
+                        "status_code": status_code,
+                        "error": redact_sensitive_text(exc),
+                    },
+                    status="error",
+                )
+                raise RuntimeError(f"API request failed: {url}: HTTP {status_code or 'error'}") from exc
             except Exception as exc:
-                log_event("api", "request_error", {"method": method, "url": url, "cache_namespace": cache_namespace, "attempt": attempt + 1, "error": str(exc)}, status="error")
+                last_error = exc
+                log_event(
+                    "api",
+                    "request_error",
+                    {
+                        "method": method,
+                        "url": url,
+                        "cache_namespace": cache_namespace,
+                        "attempt": attempt + 1,
+                        "error": redact_sensitive_text(exc),
+                    },
+                    status="error",
+                )
                 raise
-        error_message = str(last_error) if last_error else "unknown error"
-        log_event("api", "request_failed_after_retries", {"method": method, "url": url, "cache_namespace": cache_namespace, "error": error_message}, status="error")
+        error_message = redact_sensitive_text(last_error) if last_error else "unknown error"
+        log_event(
+            "api",
+            "request_failed_after_retries",
+            {"method": method, "url": url, "cache_namespace": cache_namespace, "error": error_message},
+            status="error",
+        )
         raise RuntimeError(f"API request failed after retries: {url}: {error_message}")
 
     def _rate_limit(self) -> None:

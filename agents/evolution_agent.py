@@ -10,10 +10,10 @@ from utils.json_compact import compact_json
 class EvolutionAgent:
     """Repo-style hypothesis evolution agent.
 
-    This agent follows the simple evolution modes used by public co-scientist
-    reimplementations: simplify, feasibility improve, combine, and out-of-box
-    reimagine. It does not run retrieval itself. Stage-specific human guidance
-    and any optional retrieval context are supplied by the orchestrating script.
+    This agent supports simplify, feasibility improve, combine, and out-of-box
+    reimagine modes. It does not run retrieval itself. Stage-specific human
+    guidance and any optional retrieval context are supplied by the
+    orchestrating script.
     """
 
     def __init__(self, model: str = "gemini-2.5-flash-lite") -> None:

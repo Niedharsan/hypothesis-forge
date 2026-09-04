@@ -4,5 +4,6 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 data/runs/
+data/cache/
 runs/
 .DS_Store

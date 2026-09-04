@@ -13,22 +13,23 @@ class OpenAlexAPI:
     def __init__(self, client: CachedAPIClient | None = None):
         self.client = client or CachedAPIClient()
 
-    def search(self, query: str, limit: int = 10) -> list[PaperRecord]:
+    def search(self, query: str, limit: int = 10, cutoff_year: int | None = None) -> list[PaperRecord]:
         query_variants = build_literature_query_variants(query)
         records: list[PaperRecord] = []
         seen: set[str] = set()
         variant_result_counts: dict[str, int] = {}
         for executed_query in query_variants:
             params = {"search": executed_query, "per-page": limit}
+            if cutoff_year is not None:
+                params["filter"] = f"to_publication_date:{int(cutoff_year)}-12-31"
             if os.getenv("OPENALEX_MAILTO"):
                 params["mailto"] = os.getenv("OPENALEX_MAILTO")
-            headers = {}
             if os.getenv("OPENALEX_API_KEY"):
-                headers["Authorization"] = f"Bearer {os.getenv('OPENALEX_API_KEY')}"
+                params["api_key"] = os.getenv("OPENALEX_API_KEY")
             data = self.client.get_json(
                 "https://api.openalex.org/works",
                 params=params,
-                headers=headers or None,
+                headers=None,
                 cache_namespace="openalex",
             )
             items = data.get("results", [])
@@ -42,6 +43,9 @@ class OpenAlexAPI:
                     rec.raw["executed_query_variants"] = query_variants
                     rec.raw["matched_query_variant"] = executed_query
                     rec.raw["variant_result_counts"] = variant_result_counts
+                    rec.raw["date_filter"] = (
+                        {"to_publication_date": f"{int(cutoff_year)}-12-31"} if cutoff_year is not None else None
+                    )
                     records.append(rec)
                     if len(records) >= limit:
                         return records
