@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Annotated
 
-from mcp.server.mcpserver import MCPServer
+from mcp.server import MCPServer
 from pydantic import Field
 
 from mcp_server.adapters import LiteratureAdapters, build_adapters
