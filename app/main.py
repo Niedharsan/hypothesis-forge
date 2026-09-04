@@ -15,6 +15,7 @@ from app.focus_seeds import create_focus_seed
 from app.models import FocusSeedRequest, SelectionRequest, StageRequest, StartRunRequest
 from app.stage_overrides import run_evolution
 from app.storage import RUNS_DIR, list_artifacts, read_run
+from runtime.context import seed_llm_call_count
 from utils.security import redact_sensitive_text
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -62,12 +63,15 @@ def health() -> dict[str, Any]:
 
 @app.post("/runs")
 def create_run(payload: StartRunRequest) -> dict[str, Any]:
+    seed_llm_call_count(0)
     try:
         return orchestrator.start_run(payload)
     except (ValueError, KeyError) as exc:
         raise HTTPException(status_code=400, detail=redact_sensitive_text(exc)) from exc
     except Exception as exc:
         raise HTTPException(status_code=502, detail=redact_sensitive_text(exc)) from exc
+    finally:
+        seed_llm_call_count(0)
 
 
 @app.get("/runs/{run_id}")
@@ -82,6 +86,7 @@ def get_run(run_id: str) -> dict[str, Any]:
 def advance_stage(run_id: str, payload: StageRequest) -> dict[str, Any]:
     try:
         run = read_run(run_id)
+        seed_llm_call_count(int((run.get("usage") or {}).get("calls") or 0))
         return orchestrator.run_stage(run, payload)
     except (FileNotFoundError, ValueError) as exc:
         if isinstance(exc, FileNotFoundError):
@@ -91,6 +96,8 @@ def advance_stage(run_id: str, payload: StageRequest) -> dict[str, Any]:
         raise HTTPException(status_code=400, detail=redact_sensitive_text(exc)) from exc
     except Exception as exc:
         raise HTTPException(status_code=502, detail=redact_sensitive_text(exc)) from exc
+    finally:
+        seed_llm_call_count(0)
 
 
 @app.post("/runs/{run_id}/selection")
