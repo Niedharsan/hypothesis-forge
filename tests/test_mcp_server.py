@@ -4,7 +4,9 @@ import asyncio
 from dataclasses import dataclass
 
 from mcp.client import Client
+from mcp.server.mcpserver import MCPServer
 
+import mcp_server.server as mcp_server_module
 from mcp_server.server import create_server
 from schemas.paper_record import PaperRecord
 
@@ -43,6 +45,10 @@ def test_mcp_server_lists_expected_tools():
         "search_pubmed",
         "search_semantic_scholar",
     ]
+
+
+def test_create_server_returns_mcpserver_instance():
+    assert isinstance(create_server(adapters=_stub_adapters()), MCPServer)
 
 
 def test_search_pubmed_tool_returns_normalized_paper_records():
@@ -123,6 +129,20 @@ def test_mcp_server_supports_multiple_tool_calls_in_one_session():
     assert second.structured_content["result"][0]["paper_id"] == "pmid:123"
     assert adapters.pubmed.calls == [{"query": "stress", "limit": 1, "cutoff_year": None}]
     assert adapters.crossref.calls == [{"query": "stress", "limit": 1}]
+
+
+def test_main_starts_stdio_server(monkeypatch):
+    calls: list[str] = []
+
+    class FakeServer:
+        def run(self, transport: str):
+            calls.append(transport)
+
+    monkeypatch.setattr(mcp_server_module, "create_server", lambda: FakeServer())
+
+    mcp_server_module.main()
+
+    assert calls == ["stdio"]
 
 
 def _call_tool(server, name: str, arguments: dict):
