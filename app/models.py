@@ -55,6 +55,7 @@ class SelectionRequest(BaseModel):
 
 class FocusSeedRequest(BaseModel):
     source_card_id: str = Field(min_length=1, max_length=200)
+    source_stage: StageName | None = None
     title: str = Field(default="", max_length=2_000)
     summary: str = Field(default="", max_length=20_000)
     guidance: str = Field(default="", max_length=20_000)

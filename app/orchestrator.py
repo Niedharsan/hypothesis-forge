@@ -16,7 +16,7 @@ from agents.proximity_agent import ProximityAgent, build_hypotheses_payload_from
 from agents.reflection_agent import ReflectionAgent
 from agents.supervisor_config_agent import SupervisorConfigAgent
 from llm.provider import ask_llm_json
-from runtime.context import configure_runtime
+from runtime.context import configure_runtime, set_llm_call_count
 from schemas.evidence_packet import EvidencePacket
 from schemas.paper_record import PaperRecord
 from utils.config import load_config
@@ -131,14 +131,25 @@ def update_selection(run: dict[str, Any], request: Any) -> dict[str, Any]:
 
 
 def create_focus_seed(run: dict[str, Any], request: Any) -> dict[str, Any]:
-    source = None
+    matches: list[dict[str, Any]] = []
     for cards in run.get("stages", {}).values():
         for card in cards:
             if card.get("id") == request.source_card_id:
-                source = card
-                break
-    if source is None:
+                matches.append(card)
+    if not matches:
         raise KeyError(request.source_card_id)
+    source_stage = getattr(request, "source_stage", None)
+    if source_stage:
+        source = next((card for card in matches if card.get("stage") == source_stage), None)
+        if source is None:
+            raise KeyError(f"{request.source_card_id}@{source_stage}")
+    elif len(matches) == 1:
+        source = matches[0]
+    else:
+        stages = sorted({str(card.get("stage")) for card in matches if card.get("stage")})
+        raise ValueError(
+            f"Card id '{request.source_card_id}' exists in multiple stages ({', '.join(stages)}); provide source_stage."
+        )
     seed = {
         "seed_id": f"seed-{uuid.uuid4().hex[:10]}",
         "source_card_id": request.source_card_id,
@@ -159,6 +170,7 @@ def create_focus_seed(run: dict[str, Any], request: Any) -> dict[str, Any]:
 def _prepare_stage(run: dict[str, Any], stage: str) -> None:
     config = load_config(CONFIG_PATH)
     configure_runtime(config, mode_override=run.get("runtime_mode", "normal"))
+    set_llm_call_count(int((run.get("usage") or {}).get("calls") or 0))
     start_run_log(run["objective"], f"hypothesis_forge_{stage}", run_root=run_dir(run["run_id"]) / "logs")
 
 

@@ -4,6 +4,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 import app.storage as storage
+from app import orchestrator
 from app.main import app
 
 
@@ -55,8 +56,6 @@ def test_checkpoint_selection_is_retained(client: TestClient):
 
 
 def test_complete_dry_run_traverses_all_stages(client: TestClient):
-    from app.orchestrator import STAGES
-
     response = client.post("/runs", json={
         "research_objective": "Identify mechanistically distinct, testable explanations for a synthetic biology phenotype.",
         "runtime_mode": "dry_run",
@@ -67,7 +66,7 @@ def test_complete_dry_run_traverses_all_stages(client: TestClient):
     run = response.json()
     source = "axis_generation"
 
-    for stage in STAGES[1:]:
+    for stage in orchestrator.STAGES[1:]:
         response = client.post(f"/runs/{run['run_id']}/stage", json={
             "stage": stage,
             "source_stage": source,
@@ -83,3 +82,80 @@ def test_complete_dry_run_traverses_all_stages(client: TestClient):
     assert run["current_stage"] == "candidate_ranking"
     assert run["usage"]["calls"] > 0
     assert len(run["artifacts"]) >= 10
+
+
+def test_focus_seed_requires_stage_when_card_id_ambiguous(client: TestClient):
+    run = client.post("/runs", json={
+        "research_objective": "Identify mechanistically distinct, testable explanations for a synthetic biology phenotype.",
+        "runtime_mode": "dry_run",
+        "model": "gemini-2.5-flash-lite",
+        "output_count": 10,
+    }).json()
+    source = "axis_generation"
+    for stage in ["subtopic_generation", "literature_retrieval", "synthesis", "hypothesis_generation", "proximity"]:
+        run = client.post(f"/runs/{run['run_id']}/stage", json={
+            "stage": stage,
+            "source_stage": source,
+            "include_all": True,
+            "output_count": 10,
+            "stage_guidance": "",
+        }).json()
+        source = stage
+
+    dup_id = sorted({c["id"] for c in run["stages"]["hypothesis_generation"]} & {c["id"] for c in run["stages"]["proximity"]})[0]
+    ambiguous = client.post(f"/runs/{run['run_id']}/focus-seed", json={"source_card_id": dup_id})
+    assert ambiguous.status_code == 400
+    assert "provide source_stage" in ambiguous.json()["detail"]
+
+    hyp_seed = client.post(f"/runs/{run['run_id']}/focus-seed", json={"source_card_id": dup_id, "source_stage": "hypothesis_generation"})
+    prox_seed = client.post(f"/runs/{run['run_id']}/focus-seed", json={"source_card_id": dup_id, "source_stage": "proximity"})
+    assert hyp_seed.status_code == 200
+    assert prox_seed.status_code == 200
+    assert hyp_seed.json()["source_stage"] == "hypothesis_generation"
+    assert prox_seed.json()["source_stage"] == "proximity"
+
+
+def test_llm_call_budget_accumulates_across_stage_checkpoints(client: TestClient, monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.setattr(
+        orchestrator,
+        "load_config",
+        lambda *_args, **_kwargs: {
+            "runtime": {
+                "mode": "normal",
+                "limits": {"max_llm_calls_per_run": 30},
+                "dry_run": {"mock_llm_outputs": True},
+                "pricing": {},
+            }
+        },
+    )
+    response = client.post("/runs", json={
+        "research_objective": "Identify mechanistically distinct, testable explanations for a synthetic biology phenotype.",
+        "runtime_mode": "dry_run",
+        "model": "gemini-2.5-flash-lite",
+        "output_count": 10,
+    })
+    assert response.status_code == 200
+    run = response.json()
+
+    source = "axis_generation"
+    for stage in ["subtopic_generation", "literature_retrieval"]:
+        response = client.post(f"/runs/{run['run_id']}/stage", json={
+            "stage": stage,
+            "source_stage": source,
+            "include_all": True,
+            "output_count": 10,
+            "stage_guidance": "",
+        })
+        assert response.status_code == 200
+        run = response.json()
+        source = stage
+
+    blocked = client.post(f"/runs/{run['run_id']}/stage", json={
+        "stage": "synthesis",
+        "source_stage": source,
+        "include_all": True,
+        "output_count": 10,
+        "stage_guidance": "",
+    })
+    assert blocked.status_code == 502
+    assert "LLM call limit exceeded: 30" in blocked.json()["detail"]

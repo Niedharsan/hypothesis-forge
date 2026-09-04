@@ -89,6 +89,8 @@ def focus_seed(run_id: str, payload: FocusSeedRequest) -> dict[str, Any]:
         return create_focus_seed(read_run(run_id), payload)
     except FileNotFoundError as exc:
         raise HTTPException(status_code=404, detail="Run not found") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
     except KeyError as exc:
         raise HTTPException(status_code=404, detail=f"Card not found: {exc}") from exc
 

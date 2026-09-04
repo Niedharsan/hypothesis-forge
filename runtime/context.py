@@ -48,6 +48,8 @@ def configure_runtime(config: dict[str, Any] | None = None, *, mode_override: st
     return rt
 
 def current_runtime() -> RuntimeContext: return _current_runtime.get()
+def set_llm_call_count(value: int) -> None:
+    _llm_call_count.set(max(0, int(value)))
 def increment_llm_call_count() -> int:
     v = _llm_call_count.get() + 1; _llm_call_count.set(v); return v
 def current_llm_call_count() -> int: return _llm_call_count.get()
