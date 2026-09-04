@@ -71,8 +71,5 @@ def _serialize(records: list) -> list[PaperRecordPayload]:
     return [PaperRecordPayload.from_record(record) for record in records]
 
 
-server = create_server()
-
-
 def main() -> None:
-    server.run("stdio")
+    create_server().run("stdio")
