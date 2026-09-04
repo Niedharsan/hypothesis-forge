@@ -43,6 +43,20 @@ def test_mcp_server_lists_expected_tools():
         "search_pubmed",
         "search_semantic_scholar",
     ]
+
+
+def test_create_server_builds_default_adapters(monkeypatch):
+    stub_adapters = _stub_adapters()
+    monkeypatch.setattr(mcp_server_module, "build_adapters", lambda config_path: stub_adapters)
+
+    server = create_server()
+
+    result = _call_tool(server, "search_crossref", {"query": "stress", "limit": 1})
+
+    assert stub_adapters.crossref.calls == [{"query": "stress", "limit": 1}]
+    assert _first_record(result).paper_id == "pmid:123"
+
+
 def test_search_pubmed_tool_returns_normalized_paper_records():
     adapters = _stub_adapters()
     server = create_server(adapters=adapters)
