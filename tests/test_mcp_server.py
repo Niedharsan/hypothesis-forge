@@ -150,7 +150,7 @@ def test_main_starts_stdio_server(monkeypatch):
 
     monkeypatch.setattr(mcp_server_module, "create_server", lambda: FakeServer())
 
-    mcp_server_module.main()
+    mcp_server_module.main([])
 
     assert calls == ["stdio"]
 
