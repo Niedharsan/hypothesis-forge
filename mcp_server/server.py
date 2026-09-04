@@ -24,10 +24,10 @@ def create_server(
     mcp = MCPServer(
         "hypothesisforge-literature",
         title="HypothesisForge Literature MCP Server",
-        description="Phase 1 adapter-only MCP server exposing the existing literature search adapters.",
+        description="Reusable MCP literature-search boundary backed by HypothesisForge's existing source adapters.",
         instructions=(
-            "This server exposes the repository's existing literature adapters as MCP tools. "
-            "It does not change the main HypothesisForge workflow, which still uses the direct Python retrieval path."
+            "Use these tools for normalized literature search across the supported scholarly sources. "
+            "HypothesisForge keeps query review, evidence selection, deduplication, synthesis, reflection, and evolution outside the MCP server."
         ),
     )
 

@@ -8,7 +8,7 @@ Research goal:
 
 Create up to {{ max_subtopics }} subtopics.
 
-Instructions adapted from the Co-Scientist literature-review pattern:
+HypothesisForge literature-decomposition instructions:
 - Identify distinct concepts or dimensions in the goal, including mechanisms, variables, systems, populations, methods, temporal aspects, and contexts.
 - Create subtopics that are narrow enough for targeted literature search and broad enough to yield useful findings.
 - Minimize overlap between subtopics.
