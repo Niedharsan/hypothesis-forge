@@ -2,8 +2,6 @@
 
 **Multi-Agent AI for Literature-Grounded Scientific Discovery**
 
-HypothesisForge is the standalone successor to the experimental Co-Scientist module previously embedded in LabOS. It merges the stronger v78 research workflow with the product/runtime features that had only existed in LabOS.
-
 ## What is included
 
 ### v78 scientific core
@@ -20,7 +18,7 @@ HypothesisForge is the standalone successor to the experimental Co-Scientist mod
 - Evolution, including optional focused literature retrieval
 - persistent evidence/paper memory
 
-### Runtime/UI layer carried over from LabOS
+### Runtime/UI layer
 - FastAPI service
 - persisted run state and JSON artifacts
 - explicit stage checkpoints
@@ -32,9 +30,6 @@ HypothesisForge is the standalone successor to the experimental Co-Scientist mod
 - standalone browser UI served by FastAPI
 - final candidate-ranking checkpoint
 
-## Why the split
-
-LabOS is a molecular-biology execution system. HypothesisForge is a literature/hypothesis-discovery system. Keeping them separate makes both architectures clearer and makes HypothesisForge suitable as a public AI-engineering portfolio project.
 
 ## Run locally
 
