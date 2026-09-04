@@ -78,9 +78,9 @@ def test_search_openalex_tool_uses_existing_adapter():
     adapters = _stub_adapters()
     server = create_server(adapters=adapters)
 
-    _call_tool(server, "search_openalex", {"query": "ER stress", "limit": 2})
+    _call_tool(server, "search_openalex", {"query": "ER stress", "limit": 2, "cutoff_year": 2022})
 
-    assert adapters.openalex.calls == [{"query": "ER stress", "limit": 2}]
+    assert adapters.openalex.calls == [{"query": "ER stress", "limit": 2, "cutoff_year": 2022}]
 
 
 def test_search_crossref_tool_uses_existing_adapter():

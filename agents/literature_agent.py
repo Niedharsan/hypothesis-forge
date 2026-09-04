@@ -314,11 +314,12 @@ class LiteratureAgent:
     def _search_source(self, source: str, query: str, *, limit: int, cutoff_year: int | None = None) -> list[PaperRecord]:
         """Search one source, passing date cutoffs to adapters that support them.
 
-        PubMed/EuropePMC can apply the cutoff inside the API query. Other
-        adapters keep the old behavior and are filtered after retrieval.
+        PubMed, EuropePMC, and OpenAlex can apply the cutoff inside the API
+        query. Other adapters keep the old behavior and are filtered after
+        retrieval.
         """
         adapter = self.adapters[source]
-        if cutoff_year is not None and source in {"PubMed", "EuropePMC"}:
+        if cutoff_year is not None and source in {"PubMed", "EuropePMC", "OpenAlex"}:
             return adapter.search(query, limit=limit, cutoff_year=cutoff_year)
         return adapter.search(query, limit=limit)
 

@@ -48,8 +48,12 @@ def create_server(
         return _serialize(adapter_set.europepmc.search(query, limit=limit, cutoff_year=cutoff_year))
 
     @mcp.tool(description="Search OpenAlex and return normalized PaperRecord objects.")
-    def search_openalex(query: QueryArg, limit: LimitArg = 10) -> list[PaperRecordPayload]:
-        return _serialize(adapter_set.openalex.search(query, limit=limit))
+    def search_openalex(
+        query: QueryArg,
+        limit: LimitArg = 10,
+        cutoff_year: CutoffYearArg = None,
+    ) -> list[PaperRecordPayload]:
+        return _serialize(adapter_set.openalex.search(query, limit=limit, cutoff_year=cutoff_year))
 
     @mcp.tool(description="Search Crossref and return normalized PaperRecord objects.")
     def search_crossref(query: QueryArg, limit: LimitArg = 10) -> list[PaperRecordPayload]:
