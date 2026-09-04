@@ -13,16 +13,19 @@ import app.orchestrator as orchestrator
 from agents.mcp_literature_agent import MCPLiteratureAgent
 from app.focus_seeds import create_focus_seed
 from app.models import FocusSeedRequest, SelectionRequest, StageRequest, StartRunRequest
+from app.stage_overrides import run_evolution
 from app.storage import RUNS_DIR, list_artifacts, read_run
 from utils.security import redact_sensitive_text
 
 ROOT = Path(__file__).resolve().parents[1]
 load_dotenv(ROOT / ".env", override=False)
 
-# Composition root: the canonical FastAPI runtime uses the MCP-backed
-# LiteratureAgent while preserving the v78 scientific implementation itself.
-# The orchestrator functions resolve this global at execution time.
+# Composition root: the canonical FastAPI runtime uses MCP-backed literature
+# retrieval while preserving the v78 scientific implementation itself. The
+# Evolution override only repairs lineage pairing; it does not change prompts
+# or scientific behavior.
 orchestrator.LiteratureAgent = MCPLiteratureAgent
+orchestrator._run_evolution = run_evolution
 STAGES = orchestrator.STAGES
 
 app = FastAPI(
