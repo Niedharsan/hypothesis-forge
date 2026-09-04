@@ -107,6 +107,24 @@ def test_search_semantic_scholar_tool_passes_optional_filters():
     ]
 
 
+def test_mcp_server_supports_multiple_tool_calls_in_one_session():
+    adapters = _stub_adapters()
+    server = create_server(adapters=adapters)
+
+    async def run():
+        async with Client(server) as client:
+            first = await client.call_tool("search_pubmed", {"query": "stress", "limit": 1})
+            second = await client.call_tool("search_crossref", {"query": "stress", "limit": 1})
+            return first, second
+
+    first, second = asyncio.run(run())
+
+    assert first.structured_content["result"][0]["paper_id"] == "pmid:123"
+    assert second.structured_content["result"][0]["paper_id"] == "pmid:123"
+    assert adapters.pubmed.calls == [{"query": "stress", "limit": 1, "cutoff_year": None}]
+    assert adapters.crossref.calls == [{"query": "stress", "limit": 1}]
+
+
 def _call_tool(server, name: str, arguments: dict):
     async def run():
         async with Client(server) as client:
