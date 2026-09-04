@@ -73,7 +73,7 @@ Set `HYPOTHESIS_FORGE_RUNS_DIR` if you want run data somewhere other than `data/
 
 ## MCP roadmap
 
-`MultiSourceLiteratureAgent` currently calls the repository's Python literature adapters directly. MCP is only a future roadmap item documented in [`docs/MCP_ROADMAP.md`](docs/MCP_ROADMAP.md); it is not the current retrieval architecture.
+`MultiSourceLiteratureAgent` currently calls the repository's Python literature adapters directly. The standalone Phase 1 adapter server can be launched with `python -m mcp_server`, but the main HypothesisForge workflow still uses the direct Python retrieval path until Phase 2. See [`docs/MCP_ROADMAP.md`](docs/MCP_ROADMAP.md).
 
 ## Status
 

@@ -9,10 +9,17 @@ Expose only reusable external capabilities as MCP tools:
 - `search_openalex`
 - `search_crossref`
 - `search_semantic_scholar`
-- `fetch_paper_metadata`
-- optional `annotate_pubtator`
 
 Keep the existing retrieval adapters as the implementation behind those tool contracts.
+Keep PubTator separate for now.
+
+Launch the Phase 1 server locally with:
+
+```bash
+python -m mcp_server
+```
+
+Phase 1 is adapter-only: it exposes the search tools above, returns normalized paper records, and leaves the existing `LiteratureAgent` and checkpointed workflow unchanged.
 
 ## Phase 2 — make LiteratureAgent an MCP client
 Replace direct adapter calls inside LiteratureAgent with an MCP client. Preserve the existing query-review, evidence-selection, deduplication, filtering, synthesis, and paper-memory logic unchanged.
