@@ -24,3 +24,14 @@ def test_openalex_api_uses_query_param_for_api_key(monkeypatch):
     assert client.calls
     assert client.calls[0]["params"]["api_key"] == "test-key"
     assert client.calls[0]["headers"] is None
+
+
+def test_openalex_api_omits_api_key_when_unset(monkeypatch):
+    monkeypatch.delenv("OPENALEX_API_KEY", raising=False)
+    client = StubClient()
+
+    OpenAlexAPI(client=client).search("er stress", limit=3)
+
+    assert client.calls
+    assert "api_key" not in client.calls[0]["params"]
+    assert client.calls[0]["headers"] is None
