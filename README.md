@@ -6,7 +6,7 @@
 
 ### Scientific workflow
 - supervisor-guided research configuration
-- axis generation
+- axis generation with a fixed 10-axis initial discovery set
 - subtopic generation with query-family review
 - MCP-based search across PubMed, Europe PMC, OpenAlex, Crossref, and Semantic Scholar
 - optional direct PubTator annotation/filtering
@@ -26,6 +26,7 @@
 - provenance-preserving focus-seed persistence
 - resumable runs
 - per-stage logs plus token/cost accounting
+- a run-wide LLM call budget that remains cumulative across checkpoints
 
 ## 9-stage workflow
 
@@ -42,6 +43,8 @@
 In normal mode, the canonical FastAPI workflow routes reusable literature search through an MCP client and the HypothesisForge literature MCP server. The MCP tools reuse the existing Python source adapters; query review, deduplication, evidence selection, filtering, synthesis, paper memory, reflection, and evolution remain internal scientific logic. PubTator remains a direct annotation layer.
 
 In `dry_run` mode, the LLM path uses the bundled mock client and live network literature retrieval is skipped while preserving the full checkpointed workflow.
+
+Initial axis generation deliberately produces exactly 10 discovery axes. Downstream checkpoint requests can still choose their own `output_count` within the API limits.
 
 ## Run locally
 
@@ -94,7 +97,7 @@ See [`docs/MCP_ROADMAP.md`](docs/MCP_ROADMAP.md) for the remaining resource/depl
 
 ## API
 
-- `POST /runs` — create a run and execute `axis_generation`
+- `POST /runs` — create a run and execute the fixed 10-axis `axis_generation` checkpoint
 - `GET /runs/{run_id}` — load persisted run state
 - `POST /runs/{run_id}/stage` — advance selected outputs to a later stage
 - `POST /runs/{run_id}/selection` — select, save, or reject cards without deleting them
