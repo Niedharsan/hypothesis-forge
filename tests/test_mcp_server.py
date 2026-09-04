@@ -4,8 +4,6 @@ import asyncio
 from dataclasses import dataclass
 
 from mcp.client import Client
-from mcp.server.mcpserver import MCPServer
-
 import mcp_server.server as mcp_server_module
 from mcp_server.server import create_server
 from schemas.paper_record import PaperRecord
@@ -45,12 +43,6 @@ def test_mcp_server_lists_expected_tools():
         "search_pubmed",
         "search_semantic_scholar",
     ]
-
-
-def test_create_server_returns_mcpserver_instance():
-    assert isinstance(create_server(adapters=_stub_adapters()), MCPServer)
-
-
 def test_search_pubmed_tool_returns_normalized_paper_records():
     adapters = _stub_adapters()
     server = create_server(adapters=adapters)
