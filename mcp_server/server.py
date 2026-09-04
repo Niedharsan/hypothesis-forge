@@ -10,7 +10,7 @@ from mcp_server.models import PaperRecordPayload
 
 QueryArg = Annotated[str, Field(min_length=1, max_length=2_000, description="Literature search query.")]
 LimitArg = Annotated[int, Field(ge=1, le=50, description="Maximum number of normalized paper records to return.")]
-CutoffYearArg = Annotated[int | None, Field(default=None, ge=1800, le=2100, description="Optional inclusive publication-year cutoff.")]
+CutoffYearArg = Annotated[int | None, Field(default=None, ge=1800, description="Optional inclusive publication-year cutoff.")]
 SemanticScholarYearArg = Annotated[str | None, Field(default=None, max_length=32, description="Optional Semantic Scholar year filter expression.")]
 OffsetArg = Annotated[int | None, Field(default=None, ge=0, description="Optional Semantic Scholar result offset.")]
 
