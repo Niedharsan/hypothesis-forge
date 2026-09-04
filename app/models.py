@@ -33,7 +33,7 @@ class StartRunRequest(BaseModel):
     research_objective: str = Field(min_length=3, max_length=20_000)
     cutoff_year: int = Field(default=2023, ge=1900, le=2100)
     model: str = Field(default="gemini-2.5-flash-lite", min_length=3, max_length=100)
-    output_count: int = Field(default=10, ge=1, le=50)
+    output_count: Literal[10] = 10
     runtime_mode: Literal["normal", "dry_run"] = "normal"
     literature_sources: list[str] = Field(default_factory=lambda: ["PubMed", "EuropePMC", "OpenAlex", "Crossref"])
     use_pubtator: bool = False
