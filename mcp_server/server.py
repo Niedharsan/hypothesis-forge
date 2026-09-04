@@ -20,7 +20,7 @@ def create_server(
     adapters: LiteratureAdapters | None = None,
     config_path: str = "configs/config.yaml",
 ) -> MCPServer:
-    adapter_set = adapters or build_adapters(config_path)
+    adapter_set = adapters if adapters is not None else build_adapters(config_path)
     mcp = MCPServer(
         "hypothesisforge-literature",
         title="HypothesisForge Literature MCP Server",
