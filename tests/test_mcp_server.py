@@ -71,38 +71,41 @@ def test_search_europepmc_tool_passes_cutoff_year():
     adapters = _stub_adapters()
     server = create_server(adapters=adapters)
 
-    _call_tool(
+    result = _call_tool(
         server,
         "search_europepmc",
         {"query": "proteostasis", "limit": 4, "cutoff_year": 2020},
     )
 
     assert adapters.europepmc.calls == [{"query": "proteostasis", "limit": 4, "cutoff_year": 2020}]
+    assert _first_record(result).paper_id == "pmid:123"
 
 
 def test_search_openalex_tool_uses_existing_adapter():
     adapters = _stub_adapters()
     server = create_server(adapters=adapters)
 
-    _call_tool(server, "search_openalex", {"query": "ER stress", "limit": 2, "cutoff_year": 2022})
+    result = _call_tool(server, "search_openalex", {"query": "ER stress", "limit": 2, "cutoff_year": 2022})
 
     assert adapters.openalex.calls == [{"query": "ER stress", "limit": 2, "cutoff_year": 2022}]
+    assert _first_record(result).paper_id == "pmid:123"
 
 
 def test_search_crossref_tool_uses_existing_adapter():
     adapters = _stub_adapters()
     server = create_server(adapters=adapters)
 
-    _call_tool(server, "search_crossref", {"query": "autophagy", "limit": 5})
+    result = _call_tool(server, "search_crossref", {"query": "autophagy", "limit": 5})
 
     assert adapters.crossref.calls == [{"query": "autophagy", "limit": 5}]
+    assert _first_record(result).paper_id == "pmid:123"
 
 
 def test_search_semantic_scholar_tool_passes_optional_filters():
     adapters = _stub_adapters()
     server = create_server(adapters=adapters)
 
-    _call_tool(
+    result = _call_tool(
         server,
         "search_semantic_scholar",
         {"query": "translation control", "limit": 6, "year": "2021-", "offset": 3},
@@ -111,6 +114,7 @@ def test_search_semantic_scholar_tool_passes_optional_filters():
     assert adapters.semantic_scholar.calls == [
         {"query": "translation control", "limit": 6, "year": "2021-", "offset": 3}
     ]
+    assert _first_record(result).paper_id == "pmid:123"
 
 
 def test_mcp_server_supports_multiple_tool_calls_in_one_session():
@@ -151,6 +155,10 @@ def _call_tool(server, name: str, arguments: dict):
             return await client.call_tool(name, arguments)
 
     return asyncio.run(run())
+
+
+def _first_record(result) -> PaperRecord:
+    return PaperRecord(**result.structured_content["result"][0])
 
 
 def _stub_adapters() -> StubAdapters:
