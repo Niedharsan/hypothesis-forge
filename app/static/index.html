@@ -8,7 +8,7 @@
   <section class="content">
     <div class="tabs"><button data-tab="setup" class="active">Setup</button><button data-tab="archive">Archive</button><button data-tab="outputs">Outputs</button><button data-tab="saved">Saved</button><button data-tab="usage">Usage</button><button data-tab="artifacts">Artifacts</button><button data-tab="logs">Logs</button></div>
     <div id="notice"></div>
-    <section id="setup" class="panel tab active"><h1>Start a research run</h1><label>Research objective<textarea id="objective" placeholder="Describe the scientific question, scope, and evidence boundary."></textarea></label><div class="grid"><label>Cutoff year<input id="cutoff" type="number" value="2023"></label><label>Model<select id="model"><option>gemini-2.5-flash-lite</option><option>gemini-2.5-flash</option><option>gemini-2.5-pro</option></select></label><label>Runtime<select id="runtime"><option value="normal">normal</option><option value="dry_run">dry_run</option></select></label><label><input id="evoRetrieval" type="checkbox"> Focused retrieval before Evolution</label></div><button id="start">Start run</button></section>
+    <section id="setup" class="panel tab active"><h1>Start a research run</h1><label>Research objective<textarea id="objective" placeholder="Describe the scientific question, scope, and evidence boundary."></textarea></label><div class="grid"><label>Cutoff year<input id="cutoff" type="number"></label><label>Model<select id="model"><option>gemini-2.5-flash-lite</option><option>gemini-2.5-flash</option><option>gemini-2.5-pro</option></select></label><label>Runtime<select id="runtime"><option value="normal">normal</option><option value="dry_run">dry_run</option></select></label><label><input id="evoRetrieval" type="checkbox"> Focused retrieval before Evolution</label></div><button id="start">Start run</button></section>
     <section id="archive" class="panel tab"><div class="row"><h2>Research run archive</h2><button id="refreshArchive">Refresh</button></div><p class="muted">Every persisted question run is kept here. Reopening a run does not make new LLM calls.</p><div id="archiveList"></div></section>
     <section id="outputs" class="panel tab"><div class="row"><h2 id="stageTitle">Outputs</h2><div><input id="guidance" placeholder="Optional guidance for next stage"><button id="advance">Advance selected</button><button id="advanceAll">Advance all</button></div></div><div id="cards"></div></section>
     <section id="saved" class="panel tab"><h2>Saved branches</h2><div id="savedCards"></div></section>
@@ -17,4 +17,5 @@
     <section id="logs" class="panel tab"><h2>Logs</h2><div id="logList"></div></section>
   </section>
 </main>
+<script>document.getElementById("cutoff").value=String(new Date().getFullYear())</script>
 <script src="/static/app.js"></script></body></html>
