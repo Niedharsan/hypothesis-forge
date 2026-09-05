@@ -30,7 +30,7 @@ def parse_sources(raw: str) -> list[str]:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Run v33 literature-first Co-Scientist-style generation")
+    parser = argparse.ArgumentParser(description="Run the v33 literature-first HypothesisForge generation workflow")
     parser.add_argument("--goal", required=True)
     parser.add_argument("--config", default="configs/config.yaml")
     parser.add_argument("--out-dir", default="runs/v33_literature_first")
@@ -134,12 +134,6 @@ def main() -> None:
         "llm_usage_by_model": llm_usage.get("by_model", {}),
         "top_prompt_calls": llm_usage.get("top_prompt_calls", []),
         "budget_usage": llm_usage.get("budget_usage", {}),
-            "budget_usage": llm_usage.get("budget_usage", {}),
-            "llm_usage_by_stage": llm_usage.get("by_stage", {}),
-            "llm_usage_by_model": llm_usage.get("by_model", {}),
-            "top_prompt_calls": llm_usage.get("top_prompt_calls", []),
-        "budget_usage": llm_usage.get("budget_usage", {}),
-            "budget_usage": llm_usage.get("budget_usage", {}),
     }
     (out / "summary.json").write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
     log_event("workflow", "v33_literature_first_complete", summary)

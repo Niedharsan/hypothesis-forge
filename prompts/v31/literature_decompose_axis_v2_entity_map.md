@@ -27,7 +27,7 @@ Purpose of this version:
 Instructions:
 - First identify the explicit mechanisms, intervention handles, biological processes, cell-state contexts, and experimental angles in the original axis.
 - Treat these axis-explicit concepts as mandatory coverage items.
-- Then use the retrieved entity/concept inventory to add retrieval-supported branches, candidate proteins/genes/drugs/pathways, and possible overlooked mechanisms.
+- Then use the retrieved entity/concept inventory to add retrieval-supported branches, candidate proteins/genes/interventions/pathways, and possible overlooked mechanisms.
 - The retrieved inventory may enrich, split, merge, or add subtopics, but it must not erase an explicit axis concept unless that concept is preserved under a parent subtopic or excluded with a clear reason.
 - Create parent subtopics for distinct axis-relevant biological routes. Concepts that do not define their own route should be represented as branches, contexts, or actionable handles under the closest parent subtopic.
 - Use query-family provenance to avoid popularity bias from one overrepresented field.
@@ -51,7 +51,7 @@ Return strict JSON only:
       "name": "parent subtopic name",
       "covered_branches": ["branch/mechanism/entity to preserve"],
       "supporting_query_families": ["QF01"],
-      "supporting_entities_or_terms": ["gene/protein/drug/mechanism term"],
+      "supporting_entities_or_terms": ["gene/protein/intervention/mechanism term"],
       "rationale": "why this is a distinct literature route and how retrieved evidence changed or refined the v1-style map",
       "search_queries": ["3-8 key terms", "..."]
     }
@@ -67,7 +67,7 @@ Return strict JSON only:
   ],
   "retrieval_bias_audit": [
     {
-      "possible_bias": "overrepresented query family, popular field, or common AML concept",
+      "possible_bias": "overrepresented query family, popular field, or frequently retrieved concept",
       "handling": "how you prevented it from dominating the map"
     }
   ],
