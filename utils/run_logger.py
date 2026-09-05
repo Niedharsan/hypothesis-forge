@@ -141,7 +141,9 @@ def collect_llm_usage_summary() -> dict[str, Any]:
             continue
         usage = payload.get('usage') or {}
         input_tokens = usage.get('prompt_token_count') or usage.get('input_tokens') or payload.get('estimated_prompt_tokens') or 0
-        output_tokens = usage.get('candidates_token_count') or usage.get('output_tokens') or payload.get('estimated_response_tokens') or 0
+        candidate_tokens = usage.get('candidates_token_count') or usage.get('output_tokens') or payload.get('estimated_response_tokens') or 0
+        thoughts_tokens = usage.get('thoughts_token_count') or 0
+        output_tokens = int(candidate_tokens or 0) + int(thoughts_tokens or 0)
         total_tokens = usage.get('total_token_count') or (input_tokens + output_tokens)
         call = {
             'caller': payload.get('caller'),
@@ -157,7 +159,7 @@ def collect_llm_usage_summary() -> dict[str, Any]:
             'input_tokens': input_tokens,
             'output_tokens': output_tokens,
             'total_tokens': total_tokens,
-            'thoughts_token_count': usage.get('thoughts_token_count'),
+            'thoughts_token_count': thoughts_tokens,
             'duration_s': payload.get('duration_s'),
             'error': payload.get('error'),
             'prompt_file': payload.get('prompt_file'),
@@ -220,6 +222,12 @@ def _estimate_cost(model: str | None, input_tokens: int, output_tokens: int) -> 
         from runtime.context import current_runtime
         pricing = current_runtime().pricing or {}
         p = pricing.get(model or '') or {}
-        return round((input_tokens / 1_000_000) * float(p.get('input_per_million', 0)) + (output_tokens / 1_000_000) * float(p.get('output_per_million', 0)), 6)
+        input_rate = float(p.get('input_per_million', 0))
+        output_rate = float(p.get('output_per_million', 0))
+        threshold = int(p.get('long_context_threshold_tokens') or 0)
+        if threshold and int(input_tokens or 0) > threshold:
+            input_rate = float(p.get('long_input_per_million', input_rate))
+            output_rate = float(p.get('long_output_per_million', output_rate))
+        return round((input_tokens / 1_000_000) * input_rate + (output_tokens / 1_000_000) * output_rate, 6)
     except Exception:
         return 0.0

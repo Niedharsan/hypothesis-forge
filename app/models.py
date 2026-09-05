@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from datetime import datetime, timezone
 from typing import Literal
 
 from pydantic import BaseModel, Field, field_validator, model_validator
@@ -29,9 +30,13 @@ _STAGE_ORDER = [
 _STAGE_INDEX = {stage: index for index, stage in enumerate(_STAGE_ORDER)}
 
 
+def _current_year() -> int:
+    return datetime.now(timezone.utc).year
+
+
 class StartRunRequest(BaseModel):
     research_objective: str = Field(min_length=3, max_length=20_000)
-    cutoff_year: int = Field(default=2023, ge=1900, le=2100)
+    cutoff_year: int = Field(default_factory=_current_year, ge=1900, le=2100)
     model: str = Field(default="gemini-2.5-flash-lite", min_length=3, max_length=100)
     output_count: Literal[10] = 10
     runtime_mode: Literal["normal", "dry_run"] = "normal"
@@ -58,9 +63,9 @@ class StageRequest(BaseModel):
     selection_source: Literal["auto", "user", "supervisor"] = "user"
 
     @model_validator(mode="after")
-    def forward_only(self) -> "StageRequest":
-        if self.source_stage is not None and _STAGE_INDEX[self.source_stage] >= _STAGE_INDEX[self.stage]:
-            raise ValueError("Stage transitions must move forward from the source checkpoint")
+    def adjacent_forward_only(self) -> "StageRequest":
+        if self.source_stage is not None and _STAGE_INDEX[self.source_stage] + 1 != _STAGE_INDEX[self.stage]:
+            raise ValueError("Stage transitions must advance exactly one checkpoint")
         return self
 
 

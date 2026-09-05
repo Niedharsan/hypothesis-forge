@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from pathlib import Path
 
 import pytest
@@ -32,6 +33,7 @@ def test_dry_run_start_persists_checkpoint(client: TestClient):
     run = response.json()
     assert run["current_stage"] == "axis_generation"
     assert run["status"] == "checkpoint_ready"
+    assert run["cutoff_year"] == datetime.now(timezone.utc).year
     assert run["stages"]["axis_generation"]
     loaded = client.get(f"/runs/{run['run_id']}")
     assert loaded.status_code == 200
@@ -76,6 +78,22 @@ def test_checkpoint_selection_is_retained(client: TestClient):
     assert response.status_code == 200
     card = next(c for c in response.json()["stages"]["axis_generation"] if c["id"] == card_id)
     assert card["status"] == "saved"
+
+
+def test_stage_api_rejects_skipping_checkpoints(client: TestClient):
+    run = client.post("/runs", json={
+        "research_objective": "Test strict checkpoint progression.",
+        "runtime_mode": "dry_run",
+        "output_count": 10,
+    }).json()
+    response = client.post(f"/runs/{run['run_id']}/stage", json={
+        "stage": "hypothesis_generation",
+        "source_stage": "axis_generation",
+        "include_all": True,
+        "output_count": 10,
+    })
+    assert response.status_code == 422
+    assert "exactly one checkpoint" in response.text
 
 
 def test_complete_dry_run_traverses_all_stages(client: TestClient):
