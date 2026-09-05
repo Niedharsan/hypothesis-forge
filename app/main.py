@@ -15,6 +15,7 @@ from app.focus_seeds import create_focus_seed
 from app.models import FocusSeedRequest, SelectionRequest, StageRequest, StartRunRequest
 from app.stage_overrides import run_evolution
 from app.storage import RUNS_DIR, list_artifacts, read_run
+from mcp_server.resources import list_run_catalog
 from runtime.context import seed_llm_call_count
 from utils.security import redact_sensitive_text
 
@@ -59,6 +60,11 @@ def health() -> dict[str, Any]:
         "runs_dir": str(RUNS_DIR),
         "literature_transport": "mcp-in-process",
     }
+
+
+@app.get("/runs")
+def archived_runs(limit: int = 100) -> dict[str, Any]:
+    return list_run_catalog(limit=max(1, min(int(limit), 100)))
 
 
 @app.post("/runs")

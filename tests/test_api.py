@@ -38,6 +38,30 @@ def test_dry_run_start_persists_checkpoint(client: TestClient):
     assert loaded.json()["run_id"] == run["run_id"]
 
 
+def test_run_archive_lists_persisted_questions(client: TestClient):
+    first = client.post("/runs", json={
+        "research_objective": "Archive question one",
+        "runtime_mode": "dry_run",
+        "output_count": 10,
+    }).json()
+    second = client.post("/runs", json={
+        "research_objective": "Archive question two",
+        "runtime_mode": "dry_run",
+        "output_count": 10,
+    }).json()
+
+    response = client.get("/runs?limit=100")
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["count"] == 2
+    by_id = {item["run_id"]: item for item in payload["runs"]}
+    assert set(by_id) == {first["run_id"], second["run_id"]}
+    assert by_id[first["run_id"]]["objective"] == "Archive question one"
+    assert by_id[first["run_id"]]["current_stage"] == "axis_generation"
+    assert by_id[first["run_id"]]["stage_counts"]["axis_generation"] == 10
+    assert "stages" not in by_id[first["run_id"]]
+
+
 def test_checkpoint_selection_is_retained(client: TestClient):
     run = client.post("/runs", json={
         "research_objective": "Generate testable explanations for a signaling phenotype.",
