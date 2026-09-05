@@ -17,8 +17,8 @@ Generate as many useful initial hypotheses as the route evidence supports. Do NO
 Rules:
 - Every hypothesis must map to one axis_id.
 - Do not generate filler hypotheses.
-- Do not generate multiple hypotheses that only differ by drug name but share the same mechanism.
-- For AML repurposing, the repurposed candidate should not be an established AML therapy. Known AML drugs may appear only as comparator/combination background.
+- Do not generate multiple hypotheses that differ only by a superficial entity substitution while sharing the same underlying mechanism.
+- Let the research objective determine the relevant candidate intervention, biological entity, mechanism, model, condition, or experimental focus; do not assume a drug-repurposing or disease-specific task.
 - Include assumptions and falsifiable predictions.
 - If an axis has no viable hypothesis, state that in "parked_axes".
 
@@ -30,7 +30,7 @@ Return strict JSON:
       "axis_id": "A01",
       "title": "...",
       "hypothesis": "...",
-      "candidate_drug_or_class": "...",
+      "candidate_intervention_or_focus": "...",
       "mechanistic_rationale": "...",
       "falsifiable_predictions": ["..."],
       "key_assumptions": ["..."],
