@@ -79,6 +79,14 @@ LiteratureAgent scientific logic
         -> PubMed / Europe PMC / OpenAlex / Crossref / Semantic Scholar
 ```
 
+### Why MCP is used here
+
+HypothesisForge is intentionally multi-agent. Different stages such as hypothesis generation, reflection, evolution, and ranking can in future be assigned to different reasoning-model providers when that is scientifically or economically useful—for example, one agent could use an OpenAI model while another uses Gemini or another provider.
+
+MCP gives those agents one stable interface to the shared scientific tools. The literature integrations therefore do not need to be rewritten for each model provider: whichever model powers an agent can access the same `search_pubmed`, `search_openalex`, `search_europepmc`, `search_crossref`, and `search_semantic_scholar` capabilities through the common MCP layer.
+
+MCP does **not** standardize the model-provider APIs themselves; HypothesisForge still needs provider adapters for OpenAI, Gemini, or other LLM services. Its role is to decouple those reasoning providers from the scientific tool layer, so models can be changed or mixed across agents without changing how the literature tools are implemented.
+
 The same literature server is independently launchable over stdio for external MCP clients:
 
 ```bash
