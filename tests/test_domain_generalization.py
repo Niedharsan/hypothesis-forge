@@ -45,4 +45,4 @@ def test_generic_hypothesis_payload_coerces_without_disease_or_drug_assumptions(
 
     assert len(strategies) == 1
     assert strategies[0].proposed_intervention == "rhizosphere microbial community composition"
-    assert "Arabidopsis" in strategies[0].why_selective_for_pathogen_or_disease_state
+    assert "Arabidopsis" in strategies[0].objective_relevance_rationale
